@@ -34,6 +34,8 @@ const DOM = {
   newInvoiceForm: document.getElementById('newInvoiceForm'),
 };
 
+let suppressDialogCloseOnReset = false;
+
 const TEMPLATE = {
   invoiceRow: document.getElementById('invoiceRowTemplate'),
   tag: document.getElementById('tagTemplate'),
@@ -207,6 +209,7 @@ function attachEventListeners() {
 
   DOM.newUploadButton.addEventListener('click', () => {
     if (typeof DOM.newInvoiceDialog.showModal === 'function') {
+      suppressDialogCloseOnReset = true;
       DOM.newInvoiceForm.reset();
       DOM.newInvoiceDialog.showModal();
       const firstInput = DOM.newInvoiceForm.querySelector('input, select');
@@ -220,7 +223,12 @@ function attachEventListeners() {
 
   DOM.newInvoiceForm.addEventListener('submit', handleNewInvoiceSubmit);
   DOM.newInvoiceForm.addEventListener('reset', (event) => {
-    if (event.isTrusted) {
+    if (suppressDialogCloseOnReset) {
+      suppressDialogCloseOnReset = false;
+      return;
+    }
+
+    if (event.isTrusted && DOM.newInvoiceDialog.open) {
       setTimeout(() => DOM.newInvoiceDialog.close(), 0);
     }
   });
