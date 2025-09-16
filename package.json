@@ -1,0 +1,19 @@
+{
+  "name": "inbox",
+  "version": "1.0.0",
+  "description": "Inbox – centralisation des factures (prototype fonctionnel)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "inbox",
+    "factures",
+    "ocr",
+    "tags"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
