@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InBox – Centralisation des factures</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="app" data-view="list">
+      <aside class="primary-rail" aria-label="Navigation principale">
+        <div class="primary-rail__brand" aria-label="InBox">
+          <span class="brand-mark">INBoX</span>
+        </div>
+        <nav class="primary-rail__nav" aria-label="Collections">
+          <button class="rail-button is-active" type="button" data-section="collections" aria-pressed="true">
+            <span aria-hidden="true">📄</span>
+            <span class="rail-label">Collections</span>
+          </button>
+          <button class="rail-button" type="button" data-section="tags">
+            <span aria-hidden="true">🏷️</span>
+            <span class="rail-label">Tags</span>
+          </button>
+          <button class="rail-button" type="button" data-section="recent">
+            <span aria-hidden="true">🕒</span>
+            <span class="rail-label">Recent</span>
+          </button>
+          <button class="rail-button" type="button" data-section="starred">
+            <span aria-hidden="true">⭐</span>
+            <span class="rail-label">Starred</span>
+          </button>
+          <button class="rail-button" type="button" data-section="trash">
+            <span aria-hidden="true">🗑️</span>
+            <span class="rail-label">Trash</span>
+          </button>
+        </nav>
+        <div class="primary-rail__actions">
+          <button class="upload-button" type="button" id="newUploadButton">
+            <span aria-hidden="true">⬆️</span>
+            <span class="rail-label">Upload</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="workspace" aria-label="Espace de travail">
+        <header class="workspace__header">
+          <div class="search-group">
+            <label class="field" for="searchInput">
+              <span class="field__icon" aria-hidden="true">🔍</span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Rechercher fournisseur, montant, date ou tag"
+                autocomplete="off"
+              />
+            </label>
+            <button class="ghost-button" type="button" id="clearSearchButton" aria-label="Effacer la recherche">✕</button>
+          </div>
+          <div class="filter-group" role="group" aria-label="Filtres">
+            <label class="filter">
+              <span>Statut</span>
+              <select id="statusFilter">
+                <option value="all">Tous</option>
+                <option value="nouvelle">Nouvelles</option>
+                <option value="a_verifier">À vérifier</option>
+                <option value="complete">Complètes</option>
+                <option value="archive">Archivées</option>
+                <option value="ocr_error">Erreur OCR</option>
+              </select>
+            </label>
+            <label class="filter">
+              <span>Tag</span>
+              <select id="tagFilter">
+                <option value="all">Tous les tags</option>
+              </select>
+            </label>
+            <label class="filter">
+              <span>Période</span>
+              <select id="periodFilter">
+                <option value="all">Toute période</option>
+                <option value="today">Aujourd'hui</option>
+                <option value="7d">7 derniers jours</option>
+                <option value="30d">30 derniers jours</option>
+              </select>
+            </label>
+          </div>
+        </header>
+
+        <div class="workspace__body">
+          <section class="inbox" aria-label="Liste des factures">
+            <header class="inbox__header">
+              <h1>Inbox</h1>
+              <p class="inbox__hint">Glissez une facture vers un tag pour l'appliquer en lot.</p>
+            </header>
+            <ul class="inbox__list" id="invoiceList" role="list"></ul>
+            <p class="empty-state" id="emptyState" hidden>Aucun résultat. Essayez d'ajuster vos filtres.</p>
+          </section>
+
+          <section class="invoice" aria-live="polite">
+            <header class="invoice__header">
+              <div class="invoice__meta">
+                <p class="invoice__vendor" id="invoiceVendor">Sélectionnez une facture</p>
+                <p class="invoice__summary" id="invoiceSummary">Choisissez un élément dans la liste pour afficher les détails.</p>
+              </div>
+              <div class="invoice__status" id="statusChip"></div>
+            </header>
+            <div class="invoice__columns">
+              <aside class="tag-panel" aria-label="Panneau de tags">
+                <div class="tag-panel__actions">
+                  <button class="tag-button tag-button--add" type="button" id="addTagButton" aria-label="Créer un nouveau tag">＋</button>
+                  <div class="tag-button tag-button--remove" id="removeTagDropzone" role="button" aria-label="Zone de suppression">
+                    <span aria-hidden="true">−</span>
+                    <span class="tag-button__label">Supprimer</span>
+                  </div>
+                </div>
+                <ul class="tag-panel__list" id="tagList" role="listbox" aria-label="Tags disponibles"></ul>
+              </aside>
+
+              <div class="preview" aria-label="Prévisualisation de la facture">
+                <div class="preview__stage" id="previewStage" role="button" tabindex="0" aria-label="Déposer un tag ici pour l'appliquer">
+                  <div class="preview__media" id="previewMedia" role="img" aria-live="polite"></div>
+                  <div class="applied-tags" id="appliedTags" aria-label="Tags appliqués"></div>
+                  <p class="preview__hint" id="previewHint">Déposez un tag pour l'appliquer.</p>
+                </div>
+                <div class="review-bar">
+                  <div class="review-bar__info">
+                    <p id="invoiceChannel" class="review-bar__channel"></p>
+                    <p id="invoiceTimestamp" class="review-bar__time"></p>
+                  </div>
+                  <div class="review-bar__actions">
+                    <button class="pill-button" type="button" id="sendToReviewButton">Marquer à vérifier</button>
+                    <button class="pill-button pill-button--primary" type="button" id="markCompleteButton">Marquer comme complétée</button>
+                  </div>
+                </div>
+                <section class="chat" aria-label="Fil de discussion">
+                  <header class="chat__header">
+                    <h2>Chat</h2>
+                    <p id="chatPartner" class="chat__partner"></p>
+                  </header>
+                  <ul class="chat__messages" id="chatMessages" role="list"></ul>
+                  <form class="chat__composer" id="chatForm" novalidate>
+                    <label class="field chat__input">
+                      <input
+                        type="text"
+                        id="chatInput"
+                        name="message"
+                        autocomplete="off"
+                        placeholder="Répondre…"
+                        aria-label="Écrire un message"
+                      />
+                    </label>
+                    <button class="pill-button pill-button--primary" type="submit">Envoyer</button>
+                  </form>
+                </section>
+              </div>
+
+              <aside class="ocr-panel" aria-label="Champs OCR">
+                <header class="ocr-panel__header">
+                  <h2>Champs extraits</h2>
+                  <p class="ocr-panel__hint">Corrigez les valeurs et marquez-les comme confirmées.</p>
+                </header>
+                <ul class="ocr-panel__list" id="ocrFieldList"></ul>
+              </aside>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer" role="status" aria-live="assertive"></div>
+
+    <template id="invoiceRowTemplate">
+      <li class="inbox-item">
+        <button class="inbox-item__button" type="button">
+          <div class="inbox-item__top">
+            <span class="inbox-item__time"></span>
+            <span class="status-indicator"></span>
+          </div>
+          <p class="inbox-item__title"></p>
+          <div class="inbox-item__meta">
+            <span class="inbox-item__from"></span>
+            <span class="inbox-item__amount"></span>
+          </div>
+          <div class="inbox-item__tags"></div>
+        </button>
+      </li>
+    </template>
+
+    <template id="tagTemplate">
+      <li class="tag-item">
+        <button class="tag-pill" type="button" draggable="true"></button>
+      </li>
+    </template>
+
+    <template id="ocrFieldTemplate">
+      <li class="ocr-field">
+        <article class="ocr-pill">
+          <header class="ocr-pill__header">
+            <span class="ocr-pill__label"></span>
+            <span class="ocr-pill__confidence"></span>
+          </header>
+          <div class="ocr-pill__body">
+            <input class="ocr-pill__input" type="text" />
+            <button class="ocr-pill__confirm" type="button" aria-pressed="false">Confirmer</button>
+          </div>
+        </article>
+      </li>
+    </template>
+
+    <template id="chatMessageTemplate">
+      <li class="chat-message">
+        <div class="chat-bubble">
+          <p class="chat-bubble__text"></p>
+          <span class="chat-bubble__meta"></span>
+        </div>
+      </li>
+    </template>
+
+    <template id="appliedTagTemplate">
+      <button class="applied-tag" type="button" draggable="true"></button>
+    </template>
+
+    <dialog class="modal" id="newInvoiceDialog" aria-labelledby="newInvoiceTitle">
+      <form class="modal__form" id="newInvoiceForm" method="dialog">
+        <header class="modal__header">
+          <h2 id="newInvoiceTitle">Ajouter une facture</h2>
+          <p class="modal__intro">Renseignez les informations essentielles pour ajouter une facture dans l'inbox.</p>
+        </header>
+        <div class="modal__grid">
+          <label class="modal__field">
+            <span>Fournisseur</span>
+            <input type="text" name="vendor" required placeholder="Ex. Hydro-Québec" />
+          </label>
+          <label class="modal__field">
+            <span>Montant (CAD)</span>
+            <input type="number" name="amount" step="0.01" min="0" placeholder="0.00" />
+          </label>
+          <label class="modal__field">
+            <span>Date de facture</span>
+            <input type="date" name="invoiceDate" />
+          </label>
+          <label class="modal__field">
+            <span>Canal</span>
+            <select name="source">
+              <option value="upload">Upload manuel</option>
+              <option value="sms">SMS</option>
+              <option value="email">Courriel</option>
+            </select>
+          </label>
+          <label class="modal__field">
+            <span>Méthode de paiement</span>
+            <input type="text" name="paymentMethod" placeholder="Visa •••• 1234" />
+          </label>
+          <label class="modal__field">
+            <span>URL d'aperçu</span>
+            <input type="url" name="previewUrl" placeholder="https://" />
+          </label>
+          <label class="modal__field">
+            <span>Expéditeur</span>
+            <select name="senderUserId">
+              <option value="">—</option>
+              <option value="user-submit-1">Julien Morin</option>
+              <option value="user-submit-2">Sara Blanchette</option>
+            </select>
+          </label>
+          <label class="modal__field modal__field--wide">
+            <span>Notes</span>
+            <textarea name="notes" rows="3" placeholder="Contexte, projet, instructions"></textarea>
+          </label>
+        </div>
+        <div class="modal__actions">
+          <button type="reset" class="pill-button">Annuler</button>
+          <button type="submit" class="pill-button pill-button--primary">Créer</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="src/app.js" type="module"></script>
+  </body>
+</html>
