@@ -2,6 +2,7 @@
 
 Prototype complet qui couvre les parcours clés décrits dans le cahier des charges InBox : réception de factures (SMS, courriel, upload), tagging par glisser-déposer, corrections des champs OCR, conversation rattachée à chaque facture et création d'éléments depuis l'application. Contrairement à la version statique précédente, cette déclinaison embarque un serveur Node.js léger, un stockage persistant (fichier JSON) et une API REST consommée par l'interface.
 
+
 ## UI alignée au prototype
 
 - **Hero marketing** – L'entête reprend le texte "Welcome to the new Inbox web app" ainsi que la copie fournie (capture, organise, approve) sous forme de cartes de mise en avant.
@@ -13,6 +14,13 @@ Prototype complet qui couvre les parcours clés décrits dans le cahier des char
 - **Serveur Node.js natif** – HTTP + routage maison (aucune dépendance externe) qui expose les ressources `tags`, `invoices` et `messages`.
 - **Base de données fichier** – `data/db.json` contient l'organisation de démonstration, les utilisateurs, factures, tags et historiques de chat. Toute modification depuis l'UI est automatiquement persistée.
 - **Frontend vanilla** – HTML/CSS/JS servis depuis `public/`, avec drag & drop natif, gestion des toasts, formulaires et polling léger pour le chat.
+
+## Pile technique
+
+- **Serveur Node.js natif** – HTTP + routage maison (aucune dépendance externe) qui expose les ressources `tags`, `invoices` et `messages`.
+- **Base de données fichier** – `data/db.json` contient l'organisation de démonstration, les utilisateurs, factures, tags et historiques de chat. Toute modification depuis l'UI est automatiquement persistée.
+- **Frontend vanilla** – HTML/CSS/JS servis depuis `public/`, avec drag & drop natif, gestion des toasts, formulaires et polling léger pour le chat.
+
 
 ## Démarrage rapide
 

@@ -44,6 +44,7 @@
 
       <main class="workspace" aria-label="Espace de travail">
         <header class="workspace__header">
+
           <div class="workspace__intro">
             <p class="workspace__eyebrow">Welcome to the new Inbox web app.</p>
             <h1 class="workspace__title">InBox</h1>
@@ -115,6 +116,47 @@
               </div>
               <p class="workspace__control-hint">Filtrez par statut, période ou tag pour concentrer votre revue.</p>
             </div>
+
+          <div class="search-group">
+            <label class="field" for="searchInput">
+              <span class="field__icon" aria-hidden="true">🔍</span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Rechercher fournisseur, montant, date ou tag"
+                autocomplete="off"
+              />
+            </label>
+            <button class="ghost-button" type="button" id="clearSearchButton" aria-label="Effacer la recherche">✕</button>
+          </div>
+          <div class="filter-group" role="group" aria-label="Filtres">
+            <label class="filter">
+              <span>Statut</span>
+              <select id="statusFilter">
+                <option value="all">Tous</option>
+                <option value="nouvelle">Nouvelles</option>
+                <option value="a_verifier">À vérifier</option>
+                <option value="complete">Complètes</option>
+                <option value="archive">Archivées</option>
+                <option value="ocr_error">Erreur OCR</option>
+              </select>
+            </label>
+            <label class="filter">
+              <span>Tag</span>
+              <select id="tagFilter">
+                <option value="all">Tous les tags</option>
+              </select>
+            </label>
+            <label class="filter">
+              <span>Période</span>
+              <select id="periodFilter">
+                <option value="all">Toute période</option>
+                <option value="today">Aujourd'hui</option>
+                <option value="7d">7 derniers jours</option>
+                <option value="30d">30 derniers jours</option>
+              </select>
+            </label>
+
           </div>
         </header>
 
@@ -169,6 +211,24 @@
               </div>
 
               <aside class="inspector" aria-label="Collaboration et champs OCR">
+
+              <div class="preview" aria-label="Prévisualisation de la facture">
+                <div class="preview__stage" id="previewStage" role="button" tabindex="0" aria-label="Déposer un tag ici pour l'appliquer">
+                  <div class="preview__media" id="previewMedia" role="img" aria-live="polite"></div>
+                  <div class="applied-tags" id="appliedTags" aria-label="Tags appliqués"></div>
+                  <p class="preview__hint" id="previewHint">Déposez un tag pour l'appliquer.</p>
+                </div>
+                <div class="review-bar">
+                  <div class="review-bar__info">
+                    <p id="invoiceChannel" class="review-bar__channel"></p>
+                    <p id="invoiceTimestamp" class="review-bar__time"></p>
+                  </div>
+                  <div class="review-bar__actions">
+                    <button class="pill-button" type="button" id="sendToReviewButton">Marquer à vérifier</button>
+                    <button class="pill-button pill-button--primary" type="button" id="markCompleteButton">Marquer comme complétée</button>
+                  </div>
+                </div>
+
                 <section class="chat" aria-label="Fil de discussion">
                   <header class="chat__header">
                     <h2>Chat</h2>
@@ -189,6 +249,7 @@
                     <button class="pill-button pill-button--primary" type="submit">Envoyer</button>
                   </form>
                 </section>
+
                 <section class="ocr-panel" aria-label="Champs OCR">
                   <header class="ocr-panel__header">
                     <h2>Champs extraits</h2>
@@ -196,6 +257,16 @@
                   </header>
                   <ul class="ocr-panel__list" id="ocrFieldList"></ul>
                 </section>
+
+              </div>
+
+              <aside class="ocr-panel" aria-label="Champs OCR">
+                <header class="ocr-panel__header">
+                  <h2>Champs extraits</h2>
+                  <p class="ocr-panel__hint">Corrigez les valeurs et marquez-les comme confirmées.</p>
+                </header>
+                <ul class="ocr-panel__list" id="ocrFieldList"></ul>
+
               </aside>
             </div>
           </section>
