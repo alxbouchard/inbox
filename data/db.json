@@ -1,0 +1,325 @@
+{
+  "orgs": [
+    {
+      "id": "org-demo",
+      "name": "Coop Atlas"
+    }
+  ],
+  "users": [
+    {
+      "id": "user-admin",
+      "orgId": "org-demo",
+      "name": "Amélie Dufresne",
+      "email": "amelie@coopatlas.ca",
+      "phone": "+15145550111",
+      "role": "admin",
+      "status": "active",
+      "notificationPreferences": {
+        "sms": true,
+        "email": true
+      }
+    },
+    {
+      "id": "user-tagger",
+      "orgId": "org-demo",
+      "name": "Léa Gervais",
+      "email": "lea@coopatlas.ca",
+      "phone": "+15145550145",
+      "role": "tagger",
+      "status": "active",
+      "notificationPreferences": {
+        "sms": true,
+        "email": true
+      }
+    },
+    {
+      "id": "user-submit-1",
+      "orgId": "org-demo",
+      "name": "Julien Morin",
+      "email": "julien@coopatlas.ca",
+      "phone": "+15145550187",
+      "role": "submitter",
+      "status": "active",
+      "notificationPreferences": {
+        "sms": true,
+        "email": false
+      }
+    },
+    {
+      "id": "user-submit-2",
+      "orgId": "org-demo",
+      "name": "Sara Blanchette",
+      "email": "sara@coopatlas.ca",
+      "phone": "+15145550162",
+      "role": "submitter",
+      "status": "active",
+      "notificationPreferences": {
+        "sms": false,
+        "email": true
+      }
+    }
+  ],
+  "tags": [
+    {
+      "id": "tag-fuel",
+      "orgId": "org-demo",
+      "label": "Essence",
+      "color": "#f97316",
+      "isSystem": false,
+      "createdAt": "2024-02-01T13:05:00.000Z",
+      "createdByUserId": "user-admin"
+    },
+    {
+      "id": "tag-meal",
+      "orgId": "org-demo",
+      "label": "Repas",
+      "color": "#ec4899",
+      "isSystem": false,
+      "createdAt": "2024-02-14T09:12:00.000Z",
+      "createdByUserId": "user-admin"
+    },
+    {
+      "id": "tag-card",
+      "orgId": "org-demo",
+      "label": "Carte de crédit",
+      "color": "#22d3ee",
+      "isSystem": true,
+      "createdAt": "2024-02-19T08:30:00.000Z",
+      "createdByUserId": "user-admin"
+    },
+    {
+      "id": "tag-to-review",
+      "orgId": "org-demo",
+      "label": "À approuver",
+      "color": "#a855f7",
+      "isSystem": false,
+      "createdAt": "2024-03-04T11:45:00.000Z",
+      "createdByUserId": "user-tagger"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv-gas-001",
+      "orgId": "org-demo",
+      "senderUserId": "user-submit-1",
+      "senderPhone": "+15145550187",
+      "source": "sms",
+      "originalFilename": "IMG_3421.jpg",
+      "driveFileId": "drive-1001",
+      "driveFileUrl": "https://drive.google.com/file/d/drive-1001",
+      "previewUrl": "https://images.unsplash.com/photo-1529429617124-aee1114814c4?auto=format&fit=crop&w=800&q=80",
+      "vendor": "Shell Canada",
+      "invoiceDate": "2024-03-04",
+      "amountTotal": 82.31,
+      "tps": 3.44,
+      "tvq": 6.87,
+      "paymentMethod": "Visa •••• 1234",
+      "status": "a_verifier",
+      "notes": "Plein d'essence camion livraison",
+      "tags": [
+        {
+          "tagId": "tag-fuel",
+          "appliedByUserId": "user-tagger",
+          "createdAt": "2024-03-05T14:30:00.000Z"
+        },
+        {
+          "tagId": "tag-card",
+          "appliedByUserId": "user-tagger",
+          "createdAt": "2024-03-05T14:30:10.000Z"
+        }
+      ],
+      "ocrFields": [
+        {
+          "id": "vendor",
+          "label": "Fournisseur",
+          "value": "Shell Canada",
+          "confidence": 0.78,
+          "confirmed": true
+        },
+        {
+          "id": "invoiceDate",
+          "label": "Date",
+          "value": "2024-03-04",
+          "confidence": 0.82,
+          "confirmed": false
+        },
+        {
+          "id": "amountTotal",
+          "label": "Montant",
+          "value": "82.31",
+          "confidence": 0.93,
+          "confirmed": true
+        },
+        {
+          "id": "tps",
+          "label": "TPS",
+          "value": "3.44",
+          "confidence": 0.74,
+          "confirmed": false
+        },
+        {
+          "id": "tvq",
+          "label": "TVQ",
+          "value": "6.87",
+          "confidence": 0.69,
+          "confirmed": false
+        },
+        {
+          "id": "paymentMethod",
+          "label": "Paiement",
+          "value": "Visa •••• 1234",
+          "confidence": 0.55,
+          "confirmed": false
+        }
+      ],
+      "createdAt": "2024-03-04T22:20:00.000Z",
+      "updatedAt": "2024-03-05T14:30:10.000Z"
+    },
+    {
+      "id": "inv-meal-002",
+      "orgId": "org-demo",
+      "senderUserId": "user-submit-2",
+      "senderEmail": "sara@coopatlas.ca",
+      "source": "email",
+      "originalFilename": "BonRestaurant.pdf",
+      "driveFileId": "drive-1002",
+      "driveFileUrl": "https://drive.google.com/file/d/drive-1002",
+      "previewUrl": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+      "vendor": "Bistro Limoilou",
+      "invoiceDate": "2024-03-02",
+      "amountTotal": 128.5,
+      "tps": 5.12,
+      "tvq": 10.27,
+      "paymentMethod": "Mastercard •••• 8876",
+      "status": "complete",
+      "notes": "Repas client - Projet Atlas",
+      "tags": [
+        {
+          "tagId": "tag-meal",
+          "appliedByUserId": "user-tagger",
+          "createdAt": "2024-03-03T11:05:00.000Z"
+        },
+        {
+          "tagId": "tag-card",
+          "appliedByUserId": "user-tagger",
+          "createdAt": "2024-03-03T11:05:04.000Z"
+        }
+      ],
+      "ocrFields": [
+        {
+          "id": "vendor",
+          "label": "Fournisseur",
+          "value": "Bistro Limoilou",
+          "confidence": 0.91,
+          "confirmed": true
+        },
+        {
+          "id": "invoiceDate",
+          "label": "Date",
+          "value": "2024-03-02",
+          "confidence": 0.86,
+          "confirmed": true
+        },
+        {
+          "id": "amountTotal",
+          "label": "Montant",
+          "value": "128.50",
+          "confidence": 0.94,
+          "confirmed": true
+        },
+        {
+          "id": "paymentMethod",
+          "label": "Paiement",
+          "value": "Mastercard •••• 8876",
+          "confidence": 0.68,
+          "confirmed": false
+        }
+      ],
+      "createdAt": "2024-03-02T20:12:00.000Z",
+      "updatedAt": "2024-03-03T11:05:04.000Z"
+    },
+    {
+      "id": "inv-saas-003",
+      "orgId": "org-demo",
+      "senderUserId": "user-submit-1",
+      "senderEmail": "julien@coopatlas.ca",
+      "source": "upload",
+      "originalFilename": "Invoice_March.pdf",
+      "driveFileId": "drive-1003",
+      "driveFileUrl": "https://drive.google.com/file/d/drive-1003",
+      "previewUrl": "https://images.unsplash.com/photo-1587613865525-5d0aeaa8c1ae?auto=format&fit=crop&w=800&q=80",
+      "vendor": "Figma",
+      "invoiceDate": "2024-03-01",
+      "amountTotal": 45,
+      "tps": 0,
+      "tvq": 0,
+      "paymentMethod": "Carte Visa •••• 1234",
+      "status": "nouvelle",
+      "notes": "Abonnement mensuel équipe design",
+      "tags": [
+        {
+          "tagId": "tag-card",
+          "appliedByUserId": "user-admin",
+          "createdAt": "2024-03-01T09:00:00.000Z"
+        }
+      ],
+      "ocrFields": [
+        {
+          "id": "vendor",
+          "label": "Fournisseur",
+          "value": "Figma",
+          "confidence": 0.95,
+          "confirmed": true
+        },
+        {
+          "id": "invoiceDate",
+          "label": "Date",
+          "value": "2024-03-01",
+          "confidence": 0.89,
+          "confirmed": true
+        },
+        {
+          "id": "amountTotal",
+          "label": "Montant",
+          "value": "45.00",
+          "confidence": 0.97,
+          "confirmed": true
+        }
+      ],
+      "createdAt": "2024-03-01T09:00:00.000Z",
+      "updatedAt": "2025-09-16T03:49:27.968Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-1",
+      "invoiceId": "inv-gas-001",
+      "fromUserId": "user-tagger",
+      "body": "Salut Julien! Peux-tu confirmer que c'est bien pour le camion de Québec?",
+      "attachments": [],
+      "sentVia": "inapp",
+      "deliveryStatus": "delivered",
+      "createdAt": "2024-03-05T14:32:00.000Z"
+    },
+    {
+      "id": "msg-2",
+      "invoiceId": "inv-gas-001",
+      "fromExternalPhone": "+15145550187",
+      "body": "Oui c'est pour la tournée de Québec, merci!",
+      "attachments": [],
+      "sentVia": "sms",
+      "deliveryStatus": "delivered",
+      "createdAt": "2024-03-05T14:35:00.000Z"
+    },
+    {
+      "id": "msg-3",
+      "invoiceId": "inv-meal-002",
+      "fromUserId": "user-tagger",
+      "body": "Pense à ajouter le détail du client sur la note de frais svp",
+      "attachments": [],
+      "sentVia": "inapp",
+      "deliveryStatus": "delivered",
+      "createdAt": "2024-03-03T11:05:30.000Z"
+    }
+  ]
+}
