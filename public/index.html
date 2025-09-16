@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InBox — Gestion des factures</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="app-header__title">
+        <h1>InBox</h1>
+        <p>Centralisez, classez et suivez toutes vos factures.</p>
+      </div>
+      <div class="app-header__actions">
+        <button id="openUploadDialog" class="primary-button">Ajouter une facture</button>
+      </div>
+    </header>
+
+    <div class="app-grid">
+      <aside class="sidebar" aria-label="Tags disponibles">
+        <div class="sidebar__header">
+          <h2>Tags</h2>
+          <button id="toggleTagForm" class="icon-button" aria-label="Créer un nouveau tag">＋</button>
+        </div>
+        <form id="tagForm" class="tag-form" hidden>
+          <label for="tagLabel" class="tag-form__label">Nom du tag</label>
+          <input id="tagLabel" name="label" type="text" placeholder="Ex. Essence" required />
+          <div class="tag-form__row">
+            <label for="tagColor">Couleur</label>
+            <input id="tagColor" name="color" type="color" value="#5b5bd6" />
+          </div>
+          <div class="tag-form__actions">
+            <button type="button" class="ghost-button" id="cancelTagForm">Annuler</button>
+            <button type="submit" class="primary-button">Créer</button>
+          </div>
+        </form>
+        <ul id="tagList" class="tag-list" role="list"></ul>
+      </aside>
+
+      <main class="workspace" aria-label="Liste des factures">
+        <section class="filters" aria-label="Filtres de recherche">
+          <label class="filters__field">
+            <span>Recherche</span>
+            <input id="searchInput" type="search" placeholder="Fournisseur, montant, date…" autocomplete="off" />
+          </label>
+          <label class="filters__field">
+            <span>Statut</span>
+            <select id="statusFilter">
+              <option value="all">Tous</option>
+              <option value="nouvelle">Nouvelle</option>
+              <option value="a_verifier">À vérifier</option>
+              <option value="complete">Complète</option>
+              <option value="archive">Archivée</option>
+              <option value="ocr_error">Erreur OCR</option>
+            </select>
+          </label>
+          <label class="filters__field">
+            <span>Tag</span>
+            <select id="tagFilter">
+              <option value="all">Tous</option>
+            </select>
+          </label>
+          <label class="filters__field">
+            <span>Période</span>
+            <select id="periodFilter">
+              <option value="all">Toute période</option>
+              <option value="today">Aujourd'hui</option>
+              <option value="7d">7 derniers jours</option>
+              <option value="30d">30 derniers jours</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="invoice-list" aria-live="polite">
+          <ul id="invoiceList" role="list"></ul>
+          <p id="emptyState" class="empty" hidden>Aucune facture ne correspond à vos filtres.</p>
+        </section>
+      </main>
+
+      <aside class="detail" aria-live="polite">
+        <div id="detailEmpty" class="detail-empty">
+          <h2>Sélectionnez une facture</h2>
+          <p>Choisissez une facture dans la liste pour voir ses détails.</p>
+        </div>
+        <div id="detailContent" class="detail-content" hidden>
+          <header class="detail__header">
+            <div>
+              <h2 id="detailVendor"></h2>
+              <p id="detailSummary"></p>
+            </div>
+            <div class="status">
+              <label for="statusSelect">Statut</label>
+              <select id="statusSelect"></select>
+            </div>
+          </header>
+          <div class="preview" id="preview"></div>
+          <section class="detail__section">
+            <h3>Tags appliqués</h3>
+            <div id="appliedTags" class="tag-chips" aria-label="Tags appliqués"></div>
+            <div class="tag-chips tag-chips--picker" id="tagPicker" aria-label="Ajouter un tag"></div>
+          </section>
+          <section class="detail__section">
+            <h3>Champs extraits</h3>
+            <ul id="ocrList" class="ocr-list"></ul>
+          </section>
+          <section class="detail__section">
+            <h3>Chat</h3>
+            <p id="chatPartner" class="chat-partner"></p>
+            <ul id="chatList" class="chat-list" role="list"></ul>
+            <form id="chatForm" class="chat-form">
+              <label class="chat-form__field" for="chatInput">Votre message</label>
+              <input id="chatInput" name="message" type="text" autocomplete="off" placeholder="Poser une question…" required />
+              <button type="submit" class="primary-button">Envoyer</button>
+            </form>
+          </section>
+        </div>
+      </aside>
+    </div>
+
+    <dialog id="uploadDialog" aria-labelledby="uploadDialogTitle">
+      <form id="uploadForm" class="modal" method="dialog">
+        <h2 id="uploadDialogTitle">Ajouter une facture</h2>
+        <p class="modal__intro">Complétez les informations pour créer une facture.</p>
+        <label class="modal__field">
+          <span>Fournisseur</span>
+          <input name="vendor" type="text" placeholder="Ex. Hydro-Québec" required />
+        </label>
+        <label class="modal__field">
+          <span>Montant (CAD)</span>
+          <input name="amountTotal" type="number" min="0" step="0.01" placeholder="0.00" />
+        </label>
+        <label class="modal__field">
+          <span>Date de facture</span>
+          <input name="invoiceDate" type="date" />
+        </label>
+        <label class="modal__field">
+          <span>Canal</span>
+          <select name="source">
+            <option value="upload">Upload manuel</option>
+            <option value="sms">SMS</option>
+            <option value="email">Courriel</option>
+          </select>
+        </label>
+        <label class="modal__field">
+          <span>Méthode de paiement</span>
+          <input name="paymentMethod" type="text" placeholder="Visa ••••" />
+        </label>
+        <label class="modal__field">
+          <span>URL d'aperçu</span>
+          <input name="previewUrl" type="url" placeholder="https://" />
+        </label>
+        <label class="modal__field">
+          <span>Expéditeur</span>
+          <select name="senderUserId">
+            <option value="">—</option>
+            <option value="user-submit-1">Julien Morin</option>
+            <option value="user-submit-2">Sara Blanchette</option>
+          </select>
+        </label>
+        <label class="modal__field">
+          <span>Notes</span>
+          <textarea name="notes" rows="3" placeholder="Contexte ou instructions"></textarea>
+        </label>
+        <div class="modal__actions">
+          <button type="reset" class="ghost-button">Annuler</button>
+          <button type="submit" class="primary-button">Créer</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="assertive"></div>
+
+    <template id="invoiceItemTemplate">
+      <li class="invoice-item">
+        <button type="button" class="invoice-item__button">
+          <div class="invoice-item__primary">
+            <span class="invoice-item__vendor"></span>
+            <span class="invoice-item__amount"></span>
+          </div>
+          <div class="invoice-item__meta">
+            <span class="invoice-item__date"></span>
+            <span class="invoice-item__status"></span>
+          </div>
+        </button>
+      </li>
+    </template>
+
+    <template id="tagTemplate">
+      <li class="tag-list__item">
+        <span class="tag-list__color"></span>
+        <span class="tag-list__label"></span>
+        <span class="tag-list__count"></span>
+      </li>
+    </template>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
